@@ -1,6 +1,7 @@
 {
   "name": "Maruti Energy Solar System",
   "short_name": "Maruti Energy Solar System",
+  "description": "Maruti Energy Solar System - Solar Energy Solutions",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
