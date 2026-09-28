@@ -43,7 +43,6 @@
   .card h3{margin:0 0 2px;font-size:1.05rem}
   .card .meta{color:var(--muted);font-size:.9rem;margin:0}
   .acts{display:flex;gap:10px}.acts .btn{margin-top:12px;padding:11px;font-size:.98rem}
-  .empty{background:var(--white);border-radius:12px;padding:16px;color:var(--muted)}
   .note{font-size:.85rem;color:var(--muted);margin-top:18px}
   .brand{margin:0;font-weight:700;color:var(--leaf)}
   .rt2{width:100%;border-collapse:collapse}
@@ -160,48 +159,12 @@
   <section id="t-info" class="tab">
     <h1>Solar information</h1>
     <p class="sub">Things worth knowing before you install.</p>
-    <details open>
-      <summary>3 types of solar plants</summary>
-      <ul>
-        <li><b>On-grid:</b> connected to the electricity grid, no battery. Cheapest and most common for homes.</li>
-        <li><b>Off-grid:</b> disconnected from the grid, works with a battery. More expensive.</li>
-        <li><b>Hybrid:</b> both grid and battery. Keeps working during a power cut.</li>
-      </ul>
-    </details>
-    <details>
-      <summary>What is net metering?</summary>
-      <p>During the day, any extra electricity your plant produces flows back into the grid and is deducted from your bill.</p>
-    </details>
-    <details>
-      <summary>How does the subsidy work? (PM Surya Ghar)</summary>
-      <ol>
-        <li>Register at pmsuryaghar.gov.in</li>
-        <li>Get approval from your electricity provider.</li>
-        <li>Get the plant installed by a registered installer.</li>
-        <li>Subsidy is paid directly into your bank account.</li>
-      </ol>
-      <p>Subsidy: fixed ₹78,000 for 3 kW to 10 kW. This scheme runs until March 2027.</p>
-    </details>
-    <details>
-      <summary>Per kW rate by plant size</summary>
-      <div id="rateTable" style="overflow-x:auto;padding-bottom:10px"></div>
-    </details>
-    <details>
-      <summary>Kharcha aur maintenance</summary>
-      <ul>
-        <li>Panel aam taur par 25 saal chalte hain, inverter ki warranty 5 se 10 saal.</li>
-        <li>Saal mein kuch baar panel ko paani se saaf karo.</li>
-        <li>Chhaon wali jagah par panel na lagwao.</li>
-      </ul>
-    </details>
-    <details>
-      <summary>Installer chunte waqt kya dekhein?</summary>
-      <ul>
-        <li>Wo sarkar se registered ho (subsidy ke liye zaroori).</li>
-        <li>Quote mein panel aur inverter ka brand aur warranty likhi ho.</li>
-        <li>2-3 jagah se quote lekar milao.</li>
-      </ul>
-    </details>
+    <details open><summary>3 types of solar plants</summary><ul><li><b>On-grid:</b> connected to grid, no battery. Subsidy only on this.</li><li><b>Off-grid:</b> with battery, no subsidy.</li><li><b>Hybrid:</b> grid + battery.</li></ul></details>
+    <details><summary>What is net metering?</summary><p>Extra bijli grid me jati hai aur bill me se kat-ti hai.</p></details>
+    <details><summary>How does the subsidy work? (PM Surya Ghar)</summary><p>Subsidy: fixed ₹78,000 for 3 kW to 10 kW. Scheme till March 2027.</p></details>
+    <details><summary>Per kW rate by plant size</summary><div id="rateTable" style="overflow-x:auto;padding-bottom:10px"></div></details>
+    <details><summary>Kharcha aur maintenance</summary><ul><li>Panel 25 saal, inverter 5-10 saal.</li><li>Panel ko paani se saaf karo.</li><li>Chhaon me panel na lagao.</li></ul></details>
+    <details><summary>Installer chunte waqt kya dekhein?</summary><ul><li>Sarkar se registered ho.</li><li>2-3 quote milao.</li></ul></details>
   </section>
 
   <section id="t-inst" class="tab">
@@ -211,132 +174,54 @@
     <a class="btn alt" id="askAny" href="#" target="_blank" rel="noopener">Send your estimate to someone on WhatsApp</a>
   </section>
 </main>
-
 <nav aria-label="Menu"><div role="tablist">
   <button role="tab" aria-selected="true" data-tab="t-calc">Calculator</button>
   <button role="tab" aria-selected="false" data-tab="t-info">Jankari</button>
   <button role="tab" aria-selected="false" data-tab="t-inst">Company</button>
 </div></nav>
-
 <script>
 const DATA = {
-  priceTable: [
-    { kw: 3,  rate: 66666 },
-    { kw: 4,  rate: 65000 },
-    { kw: 5,  rate: 60000, phase: "single" },
-    { kw: 5,  rate: 62000, phase: "three" },
-    { kw: 6,  rate: 60833, phase: "single" },
-    { kw: 6,  rate: 63333, phase: "three" },
-    { kw: 7,  rate: 60000 },
-    { kw: 8,  rate: 55000 },
-    { kw: 10, rate: 51000 },
-    { kw: 11, rate: 40000 },
-    { kw: 12, rate: 38750 },
-    { kw: 15, rate: 34666 },
-    { kw: 18, rate: 35000 },
-    { kw: 20, rate: 33500 },
-    { kw: 22, rate: 34090 },
-    { kw: 25, rate: 33200 },
-    { kw: 30, rate: 32333 },
-    { kw: 35, rate: 35714 },
-    { kw: 40, rate: 32500 },
-    { kw: 45, rate: 31777 },
-    { kw: 50, rate: 31200 }
-  ],
-  minKw: 3,
-  unitsPerKwPerDay: 4.5,
-  loanYearsList: [1, 2, 3, 4, 5],
-  billRules: { fixed3kw: 400, fixed5kw: 500, fixed6to10: 800, fixedPerKwAbove10: 160, rate3kw: 5.6, rateOther: 10, rateHigh: 7.95, highUnitLimit: 500 },
-  panelPerKw: 1.5,
-  panelExtra: 1,
-  panelFt: { w: 4.5, h: 8 },
-  loanRate3kw: 5.6,
-  loanRateAboveMin: 7,
-  loanRateAboveMax: 7.75,
-  subsidyFixed: 78000,
-  subsidyMaxKw: 10,
-  stateTopUp: 17000,
-  hillMultiplier: 1.1,
-  defaultCommercial: 8,
-  cities: [
-    { name: "Apni dar khud daalo", domestic: 7, commercial: 8 },
-    { name: "Jaipur", domestic: 10, commercial: 8.74 },
-    { name: "Delhi", domestic: 6, commercial: 8.5 },
-    { name: "Mumbai", domestic: 8.2, commercial: 14.1 }
-  ],
-  states: [
-    { name: "Rajasthan", domestic: 5.7, commercial: 8.74 }
-  ],
-  appPassword: "1234",
-  company: { name: "Maruti Energy Solar System", city: "", phone: "917877955655" },
-  installers: [],
-  whatsappNumber: ""
+  priceTable:[{kw:3,rate:66666},{kw:4,rate:65000},{kw:5,rate:60000,phase:"single"},{kw:5,rate:62000,phase:"three"},{kw:6,rate:60833,phase:"single"},{kw:6,rate:63333,phase:"three"},{kw:7,rate:60000},{kw:8,rate:55000},{kw:10,rate:51000},{kw:11,rate:40000},{kw:12,rate:38750},{kw:15,rate:34666},{kw:18,rate:35000},{kw:20,rate:33500},{kw:22,rate:34090},{kw:25,rate:33200},{kw:30,rate:32333},{kw:35,rate:35714},{kw:40,rate:32500},{kw:45,rate:31777},{kw:50,rate:31200}],
+  minKw:3,unitsPerKwPerDay:4.5,loanYearsList:[1,2,3,4,5],
+  billRules:{fixed3kw:400,fixed5kw:500,fixed6to10:800,fixedPerKwAbove10:160,rate3kw:5.6,rateOther:10,rateHigh:7.95,highUnitLimit:500},
+  panelPerKw:1.5,panelExtra:1,panelFt:{w:4.5,h:8},
+  loanRate3kw:5.6,loanRateAboveMin:7,loanRateAboveMax:7.75,
+  subsidyFixed:78000,subsidyMaxKw:10,stateTopUp:17000,hillMultiplier:1.1,
+  defaultCommercial:8,
+  cities:[{name:"Apni dar khud daalo",domestic:7,commercial:8},{name:"Jaipur",domestic:10,commercial:8.74},{name:"Delhi",domestic:6,commercial:8.5},{name:"Mumbai",domestic:8.2,commercial:14.1}],
+  states:[{name:"Rajasthan",domestic:5.7,commercial:8.74}],
+  appPassword:"1234",
+  company:{name:"Maruti Energy Solar System",city:"",phone:"917877955655"},
+  installers:[],whatsappNumber:""
 };
-const $ = id => document.getElementById(id);
-const inr = n => "₹" + Math.round(n).toLocaleString("en-IN");
-let summary = "";
-let loanSel = 5;
-let last = { kw: 3, units: 300 };
-$("brand").textContent = DATA.company.name;
-$("coName").textContent = DATA.company.name + " ka estimate";
-document.title = DATA.company.name + " - Solar calculator";
-function tryUnlock(){
-  if ($("pw").value === DATA.appPassword) { document.body.classList.remove("locked"); }
-  else { $("lockErr").textContent = "Galat password, dobara try karo."; }
-}
-$("unlockBtn").addEventListener("click", tryUnlock);
-$("pw").addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
-document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("on"));
-  $(b.dataset.tab).classList.add("on");
-  document.querySelectorAll("nav button").forEach(x => x.setAttribute("aria-selected", x === b));
-  window.scrollTo(0, 0);
-}));
-$("rate").placeholder = "table se apne aap";
-$("gen").value = DATA.unitsPerKwPerDay;
-const PLACES = DATA.cities.concat(DATA.states);
-[["Shehar", DATA.cities, 0], ["Rajya (average dar)", DATA.states, DATA.cities.length]].forEach(([label, list, start]) => {
-  const g = document.createElement("optgroup"); g.label = label;
-  list.forEach((c, i) => { const o = document.createElement("option"); o.value = start + i; o.textContent = c.name; g.appendChild(o); });
-  $("city").appendChild(g);
-});
-function applyCityRate(){
-  const c = PLACES[$("city").value];
-  const commercial = $("kind").value === "commercial";
-  let rate = commercial ? c.commercial : c.domestic;
-  if (commercial && rate == null) rate = DATA.defaultCommercial;
-  $("tariff").value = rate;
-}
-$("city").addEventListener("change", () => { applyCityRate(); calc(); });
-$("kind").addEventListener("change", () => { applyCityRate(); calc(); });
-applyCityRate();
-function waLink(text, phone){ return "https://wa.me/" + (phone || DATA.company.phone || "") + "?text=" + encodeURIComponent(text); }
-function fixedCharge(c){ const b = DATA.billRules; if (c === 3) return b.fixed3kw; if (c === 5) return b.fixed5kw; if (c > 5 && c <= 10) return b.fixed6to10; if (c > 10) return b.fixedPerKwAbove10 * c; return b.fixed5kw; }
-function billRate(c){ const b = DATA.billRules; return c <= 3 ? b.rate3kw : b.rateOther; }
-function tableRate(kw, phase){ const rows = DATA.priceTable.filter(r => r.kw === kw); if (!rows.length) return DATA.priceTable[DATA.priceTable.length - 1].rate; return (rows.find(r => r.phase === phase) || rows[0]).rate; }
-function renderRateTable(){ $("rateTable").innerHTML = '<table class="rt"><tr><th>Plant</th><th>Per kW</th><th>Kul kharcha</th></tr>' + DATA.priceTable.map(r => '<tr><td>' + r.kw + ' kW</td><td>' + inr(r.rate) + '</td><td>' + inr(Math.round(r.kw * r.rate / 100) * 100) + '</td></tr>').join("") + '</table>'; }
-function roofInfo(){ const roof = +$("roof").value || 0; if (!roof) { $("roofInfo").textContent = ""; return; } const panelArea = DATA.panelFt.w * DATA.panelFt.h; const maxPanels = Math.floor(roof / panelArea); $("roofInfo").textContent = maxPanels >= 6 ? "Isme lagbhag " + maxPanels + " panel aa sakta hai." : "Jagah kam hai."; }
+const $=id=>document.getElementById(id);
+const inr=n=>"₹"+Math.round(n).toLocaleString("en-IN");
+let summary="",loanSel=5,last={kw:3,units:300};
+$("brand").textContent=DATA.company.name;
+$("coName").textContent=DATA.company.name+" ka estimate";
+function tryUnlock(){if($("pw").value===DATA.appPassword){document.body.classList.remove("locked")}else{$("lockErr").textContent="Galat password"}}
+$("unlockBtn").addEventListener("click",tryUnlock);
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));$(b.dataset.tab).classList.add("on");document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x===b))}));
+function tableRate(kw,phase){const r=DATA.priceTable.filter(x=>x.kw===kw);return (r.find(x=>x.phase===phase)||r[0]).rate}
+function renderRateTable(){$("rateTable").innerHTML='<table class="rt"><tr><th>Plant</th><th>Per kW</th></tr>'+DATA.priceTable.map(r=>'<tr><td>'+r.kw+' kW</td><td>'+inr(r.rate)+'</td></tr>').join("")+'</table>'}
 function calc(){
-  const byKw = $("mode").value === "kw"; const byBill = $("mode").value === "bill"; const conn = +$("connKw").value || 3; const billIn = +$("bill").value || 0; const fixed = byBill ? fixedCharge(conn) : 0;
-  let bRate = billRate(conn); let units = byBill ? Math.round(Math.max(billIn - fixed, 0) / bRate) : (+$("units").value || 0);
-  const tariff = byBill ? bRate : (+$("tariff").value || 0); const override = +$("rate").value || 0; const phase = $("phase").value;
-  const sizes = [...new Set(DATA.priceTable.map(r => r.kw))].sort((a, b) => a - b); const gen = +$("gen").value || DATA.unitsPerKwPerDay; const perKw = gen * 30;
-  let kw; if (byKw) { kw = +$("kwSel").value || DATA.minKw; units = Math.round(kw * perKw); } else { const rawKw = Math.ceil((units / perKw) * 2) / 2; const need = Math.max(DATA.minKw, rawKw); kw = sizes.find(x => x >= need) || Math.ceil(need); }
-  const rate = override || tableRate(kw, phase); const gross = override ? kw * rate : Math.round(kw * rate / 100) * 100;
-  const commercial = $("kind").value === "commercial"; let subsidy = (!commercial && kw <= DATA.subsidyMaxKw) ? DATA.subsidyFixed : 0; if($("hill").checked && !commercial) subsidy = subsidy*1.1; if($("free").checked && !commercial) subsidy+=DATA.stateTopUp;
-  const net = Math.max(gross - subsidy, 0); const made = Math.min(kw * perKw, units); const yearSave = made * 12 * tariff; const payback = yearSave > 0 ? net / yearSave : 0;
-  $("net").textContent = inr(net); $("kw").textContent = kw + " kW"; $("perkw").textContent = inr(rate); $("gross").textContent = inr(gross); $("sub").textContent = inr(subsidy); $("yr").textContent = inr(yearSave); $("pay").textContent = payback ? payback.toFixed(1) + " saal" : "—";
-  $("unitsRow").textContent = units + " units"; $("size").textContent = kw + " kW ka plant";
-  summary = "Namaste " + DATA.company.name + ", mujhe solar lagwana hai. Andaza: " + kw + " kW, kharcha " + inr(net);
-  $("askQuote").href = waLink(summary); $("askAny").href = waLink(summary);
-  const c = DATA.company; $("instList").innerHTML = '<div class="card"><h3>' + c.name + '</h3><div class="acts"><a class="btn" target="_blank" href="'+waLink(summary,c.phone)+'">Quote</a></div></div>';
+  const byKw=$("mode").value==="kw",byBill=$("mode").value==="bill";
+  let units=byBill?300:(+$("units").value||300);
+  let kw=byKw?+$("kwSel").value||3:3;
+  if(!byKw){const perKw=135;kw=Math.max(3,Math.ceil(units/perKw*2)/2)}
+  if(byKw)units=kw*135;
+  const rate=tableRate(kw,$("phase").value),gross=kw*rate;
+  let sub=(kw<=10)?78000:0;const net=gross-sub;
+  $("net").textContent=inr(net);$("kw").textContent=kw+" kW";$("perkw").textContent=inr(rate);$("gross").textContent=inr(gross);$("sub").textContent=inr(sub);
+  $("unitsRow").textContent=units+" units";$("size").textContent=kw+" kW plant";
+  summary="Namaste "+DATA.company.name+", "+kw+"kW, "+inr(net);$("askQuote").href="https://wa.me/"+DATA.company.phone+"?text="+encodeURIComponent(summary);
+  $("instList").innerHTML='<div class="card"><h3>'+DATA.company.name+'</h3></div>';
 }
-document.querySelectorAll("#t-calc input").forEach(i => i.addEventListener("input", calc));
-$("mode").addEventListener("change", () => { const m = $("mode").value; $("unitsBox").style.display = m === "units" ? "block" : "none"; $("billBox").style.display = m === "bill" ? "block" : "none"; $("kwBox").style.display = m === "kw" ? "block" : "none"; calc(); });
-for (let k = 1; k <= 50; k++) { const o = document.createElement("option"); o.value = k; o.textContent = k + " kW"; $("connKw").appendChild(o); } $("connKw").value = "3";
-[...new Set(DATA.priceTable.map(r => r.kw))].sort((a,b)=>a-b).forEach(k=>{ const o=document.createElement("option"); o.value=k; o.textContent=k+" kW"; $("kwSel").appendChild(o); });
-renderRateTable(); calc();
-if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js").catch(()=>{}); }
+[...new Set(DATA.priceTable.map(r=>r.kw))].forEach(k=>{const o=document.createElement("option");o.value=k;o.textContent=k+" kW";$("kwSel").appendChild(o)});
+for(let k=1;k<=50;k++){const o=document.createElement("option");o.value=k;o.textContent=k+" kW";$("connKw").appendChild(o)}$("connKw").value="3";
+$("mode").addEventListener("change",()=>{const m=$("mode").value;$("unitsBox").style.display=m==="units"?"block":"none";$("billBox").style.display=m==="bill"?"block":"none";$("kwBox").style.display=m==="kw"?"block":"none";calc()});
+document.querySelectorAll("#t-calc input, #t-calc select").forEach(e=>e.addEventListener("input",calc));
+renderRateTable();calc();
 </script>
 </body>
 </html>
