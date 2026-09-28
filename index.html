@@ -60,10 +60,15 @@
   nav div{display:flex;width:100%;max-width:520px}
   nav button{flex:1;border:0;background:none;padding:14px 4px;font-size:.98rem;font-weight:600;color:var(--muted);cursor:pointer;border-top:3px solid transparent}
   nav button[aria-selected=true]{color:var(--ink);border-top-color:var(--sun)}
+  #lockScreen{position:fixed;inset:0;background:#0E2A47;z-index:999;display:flex;align-items:center;justify-content:center;padding:20px}
+  .lockCard{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:360px;text-align:center}
+  .lockCard input{width:100%;padding:12px;margin:12px 0;border:1.5px solid #C9DAE6;border-radius:10px;font-size:1.1rem}
+  .lockErr{color:red;min-height:20px}
+  body:not(.locked) #lockScreen{display:none !important}
 </style>
 </head>
-<body>
-<div id="lockScreen" style="display:none">
+<body class="locked">
+<div id="lockScreen">
   <div class="lockCard">
     <h2>Maruti Energy Solar System</h2>
     <p>Aage badhne ke liye password daalo</p>
@@ -73,20 +78,16 @@
   </div>
 </div>
 <main>
-
-  <!-- ============ TAB 1: CALCULATOR ============ -->
   <section id="t-calc" class="tab on">
     <p class="brand" id="brand"></p>
     <h1>Solar lagane ka kharcha</h1>
     <p class="sub">Apna bijli ka bill daalo, baaki hisaab app kar dega.</p>
-
     <label for="mode">Hisaab kaise lagana hai?</label>
     <select id="mode">
       <option value="units">Bijli ke units daalkar</option>
       <option value="bill">Monthly bill (₹) daalkar</option>
       <option value="kw">Plant ka kW chunkar</option>
     </select>
-
     <div id="unitsBox">
       <label for="units">Mahine ki bijli khapat (units) <span class="hint">bill par likha hota hai</span></label>
       <input id="units" type="number" inputmode="numeric" min="0" value="300">
@@ -103,35 +104,27 @@
       <select id="kwSel"></select>
       <p class="note" style="margin-top:8px">Bachat plant ki poori bijli banne ke hisaab se dikhegi.</p>
     </div>
-
     <label for="kind">Connection ka prakar</label>
     <select id="kind">
       <option value="domestic">Ghar (Domestic)</option>
       <option value="commercial">Dukaan / Factory (Commercial)</option>
     </select>
-
     <label for="city">Shehar ya rajya <span class="hint">dar apne aap bhar jayegi (andaza hai)</span></label>
     <select id="city"></select>
     <div id="rateNote"></div>
-
     <label for="tariff">Bijli ki dar (₹ per unit) <span class="hint">bill se dekho, aam taur par 6 se 9</span></label>
     <input id="tariff" type="number" inputmode="decimal" min="0" step="0.5" value="7">
-
     <label for="roof">Chhat par khali jagah (sq ft) <span class="hint">zaroori nahi</span></label>
     <input id="roof" type="number" inputmode="numeric" min="0" placeholder="jaise 400">
     <p class="note" id="roofInfo" style="margin-top:6px"></p>
-
     <label for="phase">Bijli connection <span class="hint">5 aur 6 kW ke rate par asar padta hai</span></label>
     <select id="phase">
       <option value="single">Single phase</option>
       <option value="three">Three phase</option>
     </select>
-
     <label class="check" id="hillBox"><input id="hill" type="checkbox"> Main pahadi ya North-East rajya mein rehta/rehti hoon <span class="hint">(subsidy 10% zyada)</span></label>
     <label class="check" id="freeBox"><input id="free" type="checkbox"> Mujhe sarkar se 100-150 unit bijli free milti hai <span class="hint">(rajya ki extra subsidy ₹17,000)</span></label>
-
     <div id="warn"></div>
-
     <section class="result" aria-live="polite">
       <p id="coName" style="opacity:.8;margin-bottom:6px"></p>
       <p id="netLabel">Subsidy ke baad aapka kharcha</p>
@@ -153,9 +146,7 @@
       </div>
       <div id="emiBox" style="margin-top:16px"></div>
     </section>
-
     <a class="btn" id="askQuote" href="#" target="_blank" rel="noopener">Installer se quote maango (WhatsApp)</a>
-
     <details>
       <summary>Rate badalna chahte ho?</summary>
       <div class="grid">
@@ -163,119 +154,62 @@
         <div><label for="gen">Roz ke units per kW</label><input id="gen" type="number" inputmode="decimal" step="0.1"></div>
       </div>
     </details>
-
-    <p class="note">Ye andaza hai. Asli kharcha company, panel ki quality aur shehar ke hisaab se badalta hai. Pakka karne ke liye 2-3 installers se quote lo aur pmsuryaghar.gov.in par check karo.</p>
+    <p class="note">Ye andaza hai. Asli kharcha company, panel ki quality aur shehar ke hisaab se badalta hai.</p>
   </section>
 
-  <!-- ============ TAB 2: JANKARI ============ -->
   <section id="t-info" class="tab">
     <h1>Solar information</h1>
     <p class="sub">Things worth knowing before you install.</p>
-
     <details open>
       <summary>3 types of solar plants</summary>
       <ul>
-        <li><b>On-grid:</b> connected to the electricity grid, no battery. Cheapest and most common for homes. Government subsidy applies only to this type.</li>
-        <li><b>Off-grid:</b> disconnected from the grid, works with a battery. More expensive, and no government subsidy on this.</li>
-        <li><b>Hybrid:</b> both grid and battery. Keeps working during a power cut. No subsidy on the battery cost.</li>
+        <li><b>On-grid:</b> connected to the electricity grid, no battery. Cheapest and most common for homes.</li>
+        <li><b>Off-grid:</b> disconnected from the grid, works with a battery. More expensive.</li>
+        <li><b>Hybrid:</b> both grid and battery. Keeps working during a power cut.</li>
       </ul>
     </details>
-
     <details>
       <summary>What is net metering?</summary>
-      <p>During the day, any extra electricity your plant produces beyond what your home uses flows back into the grid. Your electricity company deducts this from your bill, so your bill can become very low or even zero.</p>
+      <p>During the day, any extra electricity your plant produces flows back into the grid and is deducted from your bill.</p>
     </details>
-
     <details>
       <summary>How does the subsidy work? (PM Surya Ghar)</summary>
       <ol>
-        <li>Register at pmsuryaghar.gov.in with your state, electricity provider and consumer number.</li>
+        <li>Register at pmsuryaghar.gov.in</li>
         <li>Get approval from your electricity provider.</li>
-        <li>Get the plant installed by a government-registered installer.</li>
-        <li>After the net meter is installed and inspected, a report is filed on the portal.</li>
-        <li>The subsidy is paid directly into your bank account.</li>
+        <li>Get the plant installed by a registered installer.</li>
+        <li>Subsidy is paid directly into your bank account.</li>
       </ol>
-      <p>Subsidy: a fixed ₹78,000 for plants from 3 kW to 10 kW. No subsidy above 10 kW. Households that get 100-150 free units also get an extra ₹17,000 from the state government, making the total ₹95,000 (78,000 + 17,000). This scheme runs until March 2027.</p>
-    </details>
-
-    <details>
-      <summary>How much will you save?</summary>
-      <p>Each kW of plant produces an average of about 4.5 units a day. A 3 kW plant produces about 405 units a month. The higher your electricity rate, the faster the plant pays for itself. See the Calculator tab for the exact numbers.</p>
+      <p>Subsidy: fixed ₹78,000 for 3 kW to 10 kW. This scheme runs until March 2027.</p>
     </details>
     <details>
       <summary>Per kW rate by plant size</summary>
-      <p>The bigger the plant, the lower the cost per kW usually is. Rates below (before subsidy):</p>
       <div id="rateTable" style="overflow-x:auto;padding-bottom:10px"></div>
     </details>
     <details>
-      <summary>Bank loan and interest</summary>
-      <ul>
-        <li>About <b>5.6%</b> annual interest for a 3 kW plant.</li>
-        <li>About <b>7% to 7.75%</b> for plants above 3 kW.</li>
-        <li>The app shows the monthly instalment for 1 to 5 year loans, on the amount left after subsidy.</li>
-      </ul>
-    </details>
-    <details>
-      <summary>Panel size</summary>
-      <p>Each panel is assumed to be about <b>4.5 feet × 8 feet</b> (36 sq ft); this is used to work out the total space needed for the panels.</p>
-    </details>
-    <details>
-      <summary>How the bill is converted to units</summary>
-      <ul>
-        <li>First, the connection's fixed charge is deducted from the bill: ₹400 for a 3 kW connection, ₹500 for 5 kW, ₹800 for 6-10 kW, and ₹160 × kW above 10 kW.</li>
-        <li>The remaining amount is divided by a rate: ₹5.6 for a 3 kW connection, ₹10 for others (₹7.95 for a domestic 4-10 kW connection when usage works out above 500 units).</li>
-        <li>The resulting units are used to work out the plant size, panels, cost and everything else.</li>
-      </ul>
-    </details>
-
-    <details>
-      <summary>Cost and maintenance</summary>
-      <ul>
-        <li>Panels usually last 25 years; the inverter warranty is shorter (5 to 10 years).</li>
-        <li>Clean the panels with water a few times a year, especially in dusty areas.</li>
-        <li>Don't install panels in a shaded spot, it reduces the power generated.</li>
-      </ul>
-    </details>
-
-    <details>
-      <summary>What to check when choosing an installer</summary>
-      <ul>
-        <li>They should be government-registered (required for the subsidy).</li>
-        <li>The quote should list the panel and inverter brand and warranty.</li>
-        <li>Compare quotes from 2-3 places.</li>
-        <li>They should commit to service after installation too.</li>
-      </ul>
-    </details>
-  </section>
-
-    <details>
       <summary>Kharcha aur maintenance</summary>
       <ul>
-        <li>Panel aam taur par 25 saal chalte hain, inverter ki warranty kam hoti hai (5 se 10 saal).</li>
-        <li>Saal mein kuch baar panel ko paani se saaf karo, khaaskar dhool wale ilaake mein.</li>
-        <li>Chhaon wali jagah par panel na lagwao, isse bijli kam banti hai.</li>
+        <li>Panel aam taur par 25 saal chalte hain, inverter ki warranty 5 se 10 saal.</li>
+        <li>Saal mein kuch baar panel ko paani se saaf karo.</li>
+        <li>Chhaon wali jagah par panel na lagwao.</li>
       </ul>
     </details>
-
     <details>
       <summary>Installer chunte waqt kya dekhein?</summary>
       <ul>
         <li>Wo sarkar se registered ho (subsidy ke liye zaroori).</li>
         <li>Quote mein panel aur inverter ka brand aur warranty likhi ho.</li>
         <li>2-3 jagah se quote lekar milao.</li>
-        <li>Installation ke baad bhi service dene ka vaada ho.</li>
       </ul>
     </details>
   </section>
 
-  <!-- ============ TAB 3: INSTALLERS ============ -->
   <section id="t-inst" class="tab">
     <h1>Company</h1>
     <p class="sub">Get in touch with the company directly.</p>
     <div id="instList"></div>
     <a class="btn alt" id="askAny" href="#" target="_blank" rel="noopener">Send your estimate to someone on WhatsApp</a>
   </section>
-
 </main>
 
 <nav aria-label="Menu"><div role="tablist">
@@ -285,13 +219,7 @@
 </div></nav>
 
 <script>
-/* =====================================================
-   APNA DATA YAHAN BADLO. Baaki file ko chhedne ki zarurat nahi.
-   ===================================================== */
 const DATA = {
-  // Kharcha aur bijli
-  // Plant ke size ke hisaab se per kW kharcha (₹), subsidy se pehle. Size badhne par rate kam hota hai.
-  // 5 aur 6 kW ke liye single/three phase ka alag rate hai. Ye Domestic aur Commercial dono ke liye hai.
   priceTable: [
     { kw: 3,  rate: 66666 },
     { kw: 4,  rate: 65000 },
@@ -315,146 +243,55 @@ const DATA = {
     { kw: 45, rate: 31777 },
     { kw: 50, rate: 31200 }
   ],
-  minKw: 3,                // sabse chhota plant jo lagta hai
-  unitsPerKwPerDay: 4.5,   // 1 kW roz ke average kitne unit banata hai
-  loanYearsList: [1, 2, 3, 4, 5],   // kitne saal ke loan ki monthly kist dikhani hai
-  // Monthly bill se units nikalne ka niyam (bijli connection ke kW ke hisaab se):
-  //   units = (bill - fixed charge) ÷ dar
-  //   3 kW connection: fixed 400, dar 5.6 | 5 kW: fixed 500, dar 10 | 5 kW se upar: fixed 160 × kW, dar 10
-  //   (1, 2 kW ko 3 kW jaisa, 4 kW ko 5 kW ke fixed jaisa maana hai)
+  minKw: 3,
+  unitsPerKwPerDay: 4.5,
+  loanYearsList: [1, 2, 3, 4, 5],
   billRules: { fixed3kw: 400, fixed5kw: 500, fixed6to10: 800, fixedPerKwAbove10: 160, rate3kw: 5.6, rateOther: 10, rateHigh: 7.95, highUnitLimit: 500 },
-  panelPerKw: 1.5,         // panel quantity = kW × panelPerKw + panelExtra (lagbhag)
+  panelPerKw: 1.5,
   panelExtra: 1,
-  panelFt: { w: 4.5, h: 8 },  // 1 panel ka size (feet), area = w × h
-  // Bank loan ka byaaj (% saalana)
-  loanRate3kw: 5.6,        // 3 kW ke plant par
-  loanRateAboveMin: 7,     // 3 kW se bade plant par (kam se kam)
-  loanRateAboveMax: 7.75,  // 3 kW se bade plant par (zyada se zyada)
-
-  // Subsidy (PM Surya Ghar). Niyam badle to yahan badlo.
-  subsidyFixed: 78000,     // minKw se le kar subsidyMaxKw tak fixed subsidy (₹)
-  subsidyMaxKw: 10,        // is size se bade plant par subsidy nahi
-  stateTopUp: 17000,       // jinhe sarkar se 100-150 unit free bijli milti hai, unhe rajya ki extra subsidy (₹)
+  panelFt: { w: 4.5, h: 8 },
+  loanRate3kw: 5.6,
+  loanRateAboveMin: 7,
+  loanRateAboveMax: 7.75,
+  subsidyFixed: 78000,
+  subsidyMaxKw: 10,
+  stateTopUp: 17000,
   hillMultiplier: 1.1,
-
-  // Shehar aur bijli ki dar (₹ per unit): domestic (ghar) aur commercial (dukaan/factory).
-  // Ye lagbhag average dar hai (2026), asli bill slab ke hisaab se badalta hai.
-  // commercial: null ka matlab us jagah ki commercial dar pakki nahi hai (defaultCommercial use hoga).
   defaultCommercial: 8,
   cities: [
     { name: "Apni dar khud daalo", domestic: 7, commercial: 8 },
-    { name: "Agra", domestic: 5.7, commercial: 11.44 },
-    { name: "Ahmedabad", domestic: 5.2, commercial: 11.77 },
-    { name: "Amritsar", domestic: 5.5, commercial: 7.7 },
-    { name: "Bengaluru", domestic: 6.1, commercial: 7.18 },
-    { name: "Bhopal", domestic: 5.6, commercial: 10.12 },
-    { name: "Bhubaneswar", domestic: 4.8, commercial: 8.15 },
-    { name: "Chandigarh", domestic: 4.9, commercial: null },
-    { name: "Chennai", domestic: 3.8, commercial: 9.98 },
-    { name: "Coimbatore", domestic: 3.8, commercial: 9.98 },
-    { name: "Dehradun", domestic: 4.5, commercial: 11.15 },
-    { name: "Delhi", domestic: 6, commercial: 8.5 },
-    { name: "Faridabad", domestic: 5.9, commercial: 6.21 },
-    { name: "Goa (Panaji)", domestic: 3.6, commercial: 4.74 },
-    { name: "Gurugram", domestic: 5.9, commercial: 6.21 },
-    { name: "Guwahati", domestic: 5.8, commercial: 10.7 },
-    { name: "Hyderabad", domestic: 4.3, commercial: 5.77 },
-    { name: "Indore", domestic: 5.6, commercial: 10.12 },
     { name: "Jaipur", domestic: 10, commercial: 8.74 },
-    { name: "Jammu", domestic: 3.9, commercial: null },
-    { name: "Kanpur", domestic: 5.7, commercial: 11.44 },
-    { name: "Kochi", domestic: 5.9, commercial: 6.78 },
-    { name: "Kolkata", domestic: 7.4, commercial: 10.09 },
-    { name: "Lucknow", domestic: 5.7, commercial: 11.44 },
-    { name: "Ludhiana", domestic: 5.5, commercial: 7.7 },
-    { name: "Mumbai", domestic: 8.2, commercial: 14.1 },
-    { name: "Nagpur", domestic: 8.2, commercial: 14.1 },
-    { name: "Patna", domestic: 4.9, commercial: 11.42 },
-    { name: "Pune", domestic: 8.2, commercial: 14.1 },
-    { name: "Raipur", domestic: 4.3, commercial: 9.07 },
-    { name: "Ranchi", domestic: 5.1, commercial: 7.3 },
-    { name: "Shimla", domestic: 3.8, commercial: 5.62 },
-    { name: "Surat", domestic: 5.2, commercial: 11.77 },
-    { name: "Thiruvananthapuram", domestic: 5.9, commercial: 6.78 },
-    { name: "Varanasi", domestic: 5.7, commercial: 11.44 },
-    { name: "Vijayawada", domestic: 5.3, commercial: 10.73 },
-    { name: "Visakhapatnam", domestic: 5.3, commercial: 10.73 }
+    { name: "Delhi", domestic: 6, commercial: 8.5 },
+    { name: "Mumbai", domestic: 8.2, commercial: 14.1 }
   ],
-
-  // Rajya ka lagbhag average domestic dar (₹ per unit). Yahan badlo ya jodo.
   states: [
-    { name: "Andhra Pradesh", domestic: 5.3, commercial: 10.73 },
-    { name: "Arunachal Pradesh", domestic: 4.2, commercial: 5.66 },
-    { name: "Assam", domestic: 5.8, commercial: 10.7 },
-    { name: "Bihar", domestic: 4.9, commercial: 11.42 },
-    { name: "Chhattisgarh", domestic: 4.3, commercial: 9.07 },
-    { name: "Goa", domestic: 3.6, commercial: 4.74 },
-    { name: "Gujarat", domestic: 5.2, commercial: 11.77 },
-    { name: "Haryana", domestic: 5.9, commercial: 6.21 },
-    { name: "Himachal Pradesh", domestic: 3.8, commercial: 5.62 },
-    { name: "Jharkhand", domestic: 5.1, commercial: 7.3 },
-    { name: "Karnataka", domestic: 6.1, commercial: 7.18 },
-    { name: "Kerala", domestic: 5.9, commercial: 6.78 },
-    { name: "Madhya Pradesh", domestic: 5.6, commercial: 10.12 },
-    { name: "Maharashtra", domestic: 8.2, commercial: 14.1 },
-    { name: "Manipur", domestic: 4.6, commercial: 11.21 },
-    { name: "Meghalaya", domestic: 4.8, commercial: 13.73 },
-    { name: "Mizoram", domestic: 4.3, commercial: 8.02 },
-    { name: "Nagaland", domestic: 4.5, commercial: 8.93 },
-    { name: "Odisha", domestic: 4.8, commercial: 8.15 },
-    { name: "Punjab", domestic: 5.5, commercial: 7.7 },
-    { name: "Rajasthan", domestic: 5.7, commercial: 8.74 },
-    { name: "Sikkim", domestic: 3.4, commercial: 8.81 },
-    { name: "Tamil Nadu", domestic: 3.8, commercial: 9.98 },
-    { name: "Telangana", domestic: 4.3, commercial: 5.77 },
-    { name: "Tripura", domestic: 4.9, commercial: 11.41 },
-    { name: "Uttar Pradesh", domestic: 5.7, commercial: 11.44 },
-    { name: "Uttarakhand", domestic: 4.5, commercial: 11.15 },
-    { name: "West Bengal", domestic: 7.4, commercial: 10.09 }
+    { name: "Rajasthan", domestic: 5.7, commercial: 8.74 }
   ],
-
-  appPassword: "1234",     // App kholne ka password. Yahan badlo.
-
-  // Company (ye pura data isi company ka hai)
+  appPassword: "1234",
   company: { name: "Maruti Energy Solar System", city: "", phone: "917877955655" },
-
-  // Dusre installers ki list. Format: { name: "...", city: "...", phone: "91XXXXXXXXXX" }
-  installers: [
-    // { name: "Sharma Solar", city: "Jaipur", phone: "919999999999" }
-  ],
-
-  // Quote ka message is number par jayega. Khali chhodoge to WhatsApp khud contact poochega.
+  installers: [],
   whatsappNumber: ""
 };
-/* ===================================================== */
-
 const $ = id => document.getElementById(id);
 const inr = n => "₹" + Math.round(n).toLocaleString("en-IN");
 let summary = "";
 let loanSel = 5;
 let last = { kw: 3, units: 300 };
-
 $("brand").textContent = DATA.company.name;
 $("coName").textContent = DATA.company.name + " ka estimate";
-$("askQuote").textContent = DATA.company.name + " se quote maango (WhatsApp)";
 document.title = DATA.company.name + " - Solar calculator";
-
 function tryUnlock(){
   if ($("pw").value === DATA.appPassword) { document.body.classList.remove("locked"); }
   else { $("lockErr").textContent = "Galat password, dobara try karo."; }
 }
 $("unlockBtn").addEventListener("click", tryUnlock);
 $("pw").addEventListener("keydown", e => { if (e.key === "Enter") tryUnlock(); });
-
-// Tabs
 document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => {
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("on"));
   $(b.dataset.tab).classList.add("on");
   document.querySelectorAll("nav button").forEach(x => x.setAttribute("aria-selected", x === b));
   window.scrollTo(0, 0);
 }));
-
-// Fill defaults
 $("rate").placeholder = "table se apne aap";
 $("gen").value = DATA.unitsPerKwPerDay;
 const PLACES = DATA.cities.concat(DATA.states);
@@ -467,204 +304,39 @@ function applyCityRate(){
   const c = PLACES[$("city").value];
   const commercial = $("kind").value === "commercial";
   let rate = commercial ? c.commercial : c.domestic;
-  const guess = commercial && rate == null;
-  if (guess) rate = DATA.defaultCommercial;
+  if (commercial && rate == null) rate = DATA.defaultCommercial;
   $("tariff").value = rate;
-  $("rateNote").innerHTML = guess ? '<div class="warn">Is shehar ki commercial dar pakki nahi mili. Andaza ₹' + rate + ' rakha hai, apne bill se sahi dar daalo.</div>' : "";
 }
 $("city").addEventListener("change", () => { applyCityRate(); calc(); });
-$("kind").addEventListener("change", () => {
-  const box = $("kind").value === "commercial" ? "none" : "flex";
-  $("hillBox").style.display = box;
-  $("freeBox").style.display = box;
-  applyCityRate(); calc();
-});
+$("kind").addEventListener("change", () => { applyCityRate(); calc(); });
 applyCityRate();
-
-function waLink(text, phone){
-  return "https://wa.me/" + (phone || DATA.company.phone || DATA.whatsappNumber || "") + "?text=" + encodeURIComponent(text);
-}
-
-function fixedCharge(c){
-  const b = DATA.billRules;
-  if (c === 3) return b.fixed3kw;
-  if (c === 5) return b.fixed5kw;
-  if (c > 5 && c <= 10) return b.fixed6to10;
-  if (c > 10) return b.fixedPerKwAbove10 * c;
-  return b.fixed5kw;   // 4 kW jaisa beech ka load
-}
-function billRate(c){
-  const b = DATA.billRules;
-  return c <= 3 ? b.rate3kw : b.rateOther;
-}
-function tableRate(kw, phase){
-  const rows = DATA.priceTable.filter(r => r.kw === kw);
-  if (!rows.length) return DATA.priceTable[DATA.priceTable.length - 1].rate;   // sabse bade size ka rate
-  return (rows.find(r => r.phase === phase) || rows[0]).rate;
-}
-
-function renderRateTable(){
-  $("rateTable").innerHTML = '<table class="rt"><tr><th>Plant</th><th>Per kW</th><th>Kul kharcha</th></tr>' +
-    DATA.priceTable.map(r => '<tr><td>' + r.kw + ' kW' + (r.phase ? ' (' + (r.phase === "single" ? "single" : "three") + ' phase)' : '') + '</td><td>' + inr(r.rate) + '</td><td>' + inr(Math.round(r.kw * r.rate / 100) * 100) + '</td></tr>').join("") +
-    '</table>';
-}
-
-function roofInfo(){
-  const roof = +$("roof").value || 0;
-  if (!roof) { $("roofInfo").textContent = ""; return; }
-  const panelArea = DATA.panelFt.w * DATA.panelFt.h;
-  const maxPanels = Math.floor(roof / panelArea);
-  const maxKw = maxPanels >= 6 ? Math.floor(((maxPanels - 1) / DATA.panelPerKw) * 2) / 2 : 0;
-  $("roofInfo").textContent = maxPanels >= 6
-    ? "Isme lagbhag " + maxPanels + " panel (lagbhag " + maxKw + " kW tak ka plant) aa sakta hai."
-    : "Itni jagah mein kam se kam " + DATA.minKw + " kW ke 6 panel (lagbhag " + Math.round(6 * panelArea) + " sq ft) nahi aayenge.";
-}
-
+function waLink(text, phone){ return "https://wa.me/" + (phone || DATA.company.phone || "") + "?text=" + encodeURIComponent(text); }
+function fixedCharge(c){ const b = DATA.billRules; if (c === 3) return b.fixed3kw; if (c === 5) return b.fixed5kw; if (c > 5 && c <= 10) return b.fixed6to10; if (c > 10) return b.fixedPerKwAbove10 * c; return b.fixed5kw; }
+function billRate(c){ const b = DATA.billRules; return c <= 3 ? b.rate3kw : b.rateOther; }
+function tableRate(kw, phase){ const rows = DATA.priceTable.filter(r => r.kw === kw); if (!rows.length) return DATA.priceTable[DATA.priceTable.length - 1].rate; return (rows.find(r => r.phase === phase) || rows[0]).rate; }
+function renderRateTable(){ $("rateTable").innerHTML = '<table class="rt"><tr><th>Plant</th><th>Per kW</th><th>Kul kharcha</th></tr>' + DATA.priceTable.map(r => '<tr><td>' + r.kw + ' kW</td><td>' + inr(r.rate) + '</td><td>' + inr(Math.round(r.kw * r.rate / 100) * 100) + '</td></tr>').join("") + '</table>'; }
+function roofInfo(){ const roof = +$("roof").value || 0; if (!roof) { $("roofInfo").textContent = ""; return; } const panelArea = DATA.panelFt.w * DATA.panelFt.h; const maxPanels = Math.floor(roof / panelArea); $("roofInfo").textContent = maxPanels >= 6 ? "Isme lagbhag " + maxPanels + " panel aa sakta hai." : "Jagah kam hai."; }
 function calc(){
-  const byKw = $("mode").value === "kw";
-  const byBill = $("mode").value === "bill";
-  const conn = +$("connKw").value || 3;
-  const billIn = +$("bill").value || 0;
-  const fixed = byBill ? fixedCharge(conn) : 0;
-  const domestic = $("kind").value !== "commercial";
-  let bRate = billRate(conn);
-  let units = byBill ? Math.round(Math.max(billIn - fixed, 0) / bRate) : (+$("units").value || 0);
-  if (byBill && domestic && conn >= 4 && conn <= 10 && units > DATA.billRules.highUnitLimit) {
-    bRate = DATA.billRules.rateHigh;
-    units = Math.round(Math.max(billIn - fixed, 0) / bRate);
-  }
-  const roof = +$("roof").value || 0;
-  const tariff = byBill ? bRate : (+$("tariff").value || 0);
-  const override = +$("rate").value || 0;
-  const phase = $("phase").value;
-  const sizes = [...new Set(DATA.priceTable.map(r => r.kw))].sort((a, b) => a - b);
-  const gen = +$("gen").value || DATA.unitsPerKwPerDay;
-  const hill = $("hill").checked;
-  const perKw = gen * 30;
-
-  let kw, warn = "";
-  if (byKw) {
-    kw = +$("kwSel").value || DATA.minKw;
-    units = Math.round(kw * perKw);
-    if (roof > 0) {
-      const maxKw = Math.floor(roof / 100 * 2) / 2;
-      if (kw > maxKw) warn = "Aapki chhat par lagbhag " + maxKw + " kW hi lag sakta hai, " + kw + " kW ke liye lagbhag " + (kw * 100) + " sq ft chahiye.";
-    }
-  } else {
-    const rawKw = Math.ceil((units / perKw) * 2) / 2;
-    const need = Math.max(DATA.minKw, rawKw);
-    kw = sizes.find(x => x >= need) || Math.ceil(need);
-    if (units > 0 && rawKw < DATA.minKw) warn = "Aapki khapat ke hisaab se chhota plant kaafi hota, lekin kam se kam " + DATA.minKw + " kW ka plant hi lagta hai.";
-    if (roof > 0) {
-      const maxKw = Math.floor(roof / 100 * 2) / 2;
-      if (maxKw < DATA.minKw) { warn = "Itni jagah mein " + DATA.minKw + " kW ka plant nahi lagega (lagbhag " + (DATA.minKw * 100) + " sq ft chahiye)."; kw = DATA.minKw; }
-      else if (kw > maxKw) { kw = sizes.filter(x => x <= maxKw).pop() || DATA.minKw; warn = "Aapki chhat par lagbhag " + maxKw + " kW hi lag sakta hai, isliye " + kw + " kW ka plant rakha hai."; }
-    }
-  }
-
-  const rate = override || tableRate(kw, phase);
-  const gross = override ? kw * rate : Math.round(kw * rate / 100) * 100;
-  const commercial = $("kind").value === "commercial";
-  const m = (hill && !commercial) ? DATA.hillMultiplier : 1;
-  let subsidy = 0, topUp = false;
-  if (!commercial && kw <= DATA.subsidyMaxKw) {
-    subsidy = DATA.subsidyFixed * m;
-    if ($("free").checked) { subsidy += DATA.stateTopUp; topUp = true; }
-  }
-  const net = Math.max(gross - subsidy, 0);
-  const made = Math.min(kw * perKw, units);
-  const yearSave = made * 12 * tariff;
-  const payback = yearSave > 0 ? net / yearSave : 0;
-  const emiFor = (pct, years) => { const r = pct / 100 / 12, n = years * 12; return r > 0 ? net * r / (1 - Math.pow(1 + r, -n)) : net / n; };
-  const small = kw <= 3;
-  const rateText = small ? DATA.loanRate3kw + "%" : DATA.loanRateAboveMin + "% se " + DATA.loanRateAboveMax + "%";
-  const emiText = y => small ? inr(emiFor(DATA.loanRate3kw, y)) : inr(emiFor(DATA.loanRateAboveMin, y)) + " se " + inr(emiFor(DATA.loanRateAboveMax, y));
-  const totalText = y => small ? inr(emiFor(DATA.loanRate3kw, y) * y * 12) : inr(emiFor(DATA.loanRateAboveMin, y) * y * 12) + " se " + inr(emiFor(DATA.loanRateAboveMax, y) * y * 12);
-  $("emiBox").innerHTML = net ? '<p style="margin:0 0 4px">Loan ki monthly kist (' + rateText + ' byaaj). Saal par tap karo.</p><table class="rt2">' +
-    DATA.loanYearsList.map(y => '<tr data-y="' + y + '"' + (y === loanSel ? ' class="sel"' : '') + '><td>' + y + ' saal</td><td>' + emiText(y) + '/mahina</td></tr>').join("") + '</table>' +
-    '<p style="margin:10px 0 0;opacity:.85">' + loanSel + ' saal ka loan: kul bharna lagbhag ' + totalText(loanSel) + '</p>' : "";
-
-  $("net").textContent = inr(net);
-  $("size").textContent = kw + " kW ka plant, mahine mein lagbhag " + Math.round(kw * perKw) + " units";
-  $("kw").textContent = kw + " kW";
-  $("perkw").textContent = inr(rate);
-  $("gross").textContent = inr(gross);
-  $("sub").textContent = inr(subsidy);
-  $("subLabel").textContent = topUp ? "Sarkari subsidy (kendra + rajya)" : "Sarkari subsidy";
-  $("yr").textContent = inr(yearSave);
-  $("pay").textContent = payback ? payback.toFixed(1) + " saal" : "—";
-  const panelCount = kw === 3 ? 6 : Math.round(kw * DATA.panelPerKw + DATA.panelExtra);
-  const panelArea = panelCount * DATA.panelFt.w * DATA.panelFt.h;
-  $("panels").textContent = (kw === 3 ? "" : "lagbhag ") + panelCount;
-  $("panelArea").textContent = "lagbhag " + panelArea.toLocaleString("en-IN") + " sq ft" + (roof > 0 ? (panelArea <= roof ? " (aapki jagah kaafi hai)" : " (aapki " + roof + " sq ft jagah se zyada)") : "");
-  $("unitsRow").textContent = units + " units";
-  $("billRow").textContent = byBill ? inr(billIn) : inr(units * tariff);
-  $("fixedWrap").style.display = byBill ? "flex" : "none";
-  $("varWrap").style.display = byBill ? "flex" : "none";
-  $("fixedRow").textContent = "− " + inr(fixed);
-  $("varRow").textContent = inr(Math.max(billIn - fixed, 0)) + " ÷ ₹" + bRate;
-  $("billNote").textContent = "Fixed charge " + inr(fixedCharge(conn)) + " ghata kar ₹" + bRate + " se bhaag diya." + (byBill && domestic && conn >= 4 && conn <= 10 && units > DATA.billRules.highUnitLimit ? " 500 unit se zyada khapat hone par ₹" + DATA.billRules.rateHigh + " ki dar lagi hai." : " Is tareeke mein city ki dar nahi, yahi dar maani gayi hai.");
-  $("unitsLabel").textContent = byKw ? "Plant se mahine ki bijli" : "Mahine ki khapat";
-  $("billLabel").textContent = byKw ? "Itni bijli ka bill" : "Mahine ka bijli bill";
-  $("coName").textContent = DATA.company.name + " ka estimate";
-  last = { kw, units };
-  if (byBill && kw > conn) warn = (warn ? warn + " " : "") + "Aapke connection ka load " + conn + " kW hai, plant " + kw + " kW ka hai. Itna plant lagane ke liye load badhwana pad sakta hai.";
-  if (!commercial && kw > DATA.subsidyMaxKw) warn = (warn ? warn + " " : "") + DATA.subsidyMaxKw + " kW se bade plant par sarkari subsidy nahi milti.";
-  if (commercial) warn = (warn ? warn + " " : "") + "Commercial connection par PM Surya Ghar subsidy nahi milti. Bade plant mein per kW rate aksar kam hota hai, installer se poochho.";
-  $("netLabel").textContent = commercial ? "Aapka kharcha (subsidy nahi)" : "Subsidy ke baad aapka kharcha";
-  $("warn").innerHTML = warn ? '<div class="warn">' + warn + '</div>' : "";
-
-  summary = "Namaste " + DATA.company.name + ", mujhe solar lagwana hai (" + (commercial ? "Commercial" : "Domestic") + " connection).\n" + (byKw ? "Plant ka size: " + kw + " kW" : byBill ? "Mahine ka bill: ₹" + billIn + " (" + conn + " kW connection, lagbhag " + units + " units)" : "Mahine ki khapat: " + units + " units") + "\nAndaza: " + kw + " kW ka plant, subsidy ke baad lagbhag " + inr(net) + ".\nKya aap sahi quote de sakte hain?";
-  $("askQuote").href = waLink(summary);
-  $("askAny").href = waLink(summary);
-  renderInstallers();
+  const byKw = $("mode").value === "kw"; const byBill = $("mode").value === "bill"; const conn = +$("connKw").value || 3; const billIn = +$("bill").value || 0; const fixed = byBill ? fixedCharge(conn) : 0;
+  let bRate = billRate(conn); let units = byBill ? Math.round(Math.max(billIn - fixed, 0) / bRate) : (+$("units").value || 0);
+  const tariff = byBill ? bRate : (+$("tariff").value || 0); const override = +$("rate").value || 0; const phase = $("phase").value;
+  const sizes = [...new Set(DATA.priceTable.map(r => r.kw))].sort((a, b) => a - b); const gen = +$("gen").value || DATA.unitsPerKwPerDay; const perKw = gen * 30;
+  let kw; if (byKw) { kw = +$("kwSel").value || DATA.minKw; units = Math.round(kw * perKw); } else { const rawKw = Math.ceil((units / perKw) * 2) / 2; const need = Math.max(DATA.minKw, rawKw); kw = sizes.find(x => x >= need) || Math.ceil(need); }
+  const rate = override || tableRate(kw, phase); const gross = override ? kw * rate : Math.round(kw * rate / 100) * 100;
+  const commercial = $("kind").value === "commercial"; let subsidy = (!commercial && kw <= DATA.subsidyMaxKw) ? DATA.subsidyFixed : 0; if($("hill").checked && !commercial) subsidy = subsidy*1.1; if($("free").checked && !commercial) subsidy+=DATA.stateTopUp;
+  const net = Math.max(gross - subsidy, 0); const made = Math.min(kw * perKw, units); const yearSave = made * 12 * tariff; const payback = yearSave > 0 ? net / yearSave : 0;
+  $("net").textContent = inr(net); $("kw").textContent = kw + " kW"; $("perkw").textContent = inr(rate); $("gross").textContent = inr(gross); $("sub").textContent = inr(subsidy); $("yr").textContent = inr(yearSave); $("pay").textContent = payback ? payback.toFixed(1) + " saal" : "—";
+  $("unitsRow").textContent = units + " units"; $("size").textContent = kw + " kW ka plant";
+  summary = "Namaste " + DATA.company.name + ", mujhe solar lagwana hai. Andaza: " + kw + " kW, kharcha " + inr(net);
+  $("askQuote").href = waLink(summary); $("askAny").href = waLink(summary);
+  const c = DATA.company; $("instList").innerHTML = '<div class="card"><h3>' + c.name + '</h3><div class="acts"><a class="btn" target="_blank" href="'+waLink(summary,c.phone)+'">Quote</a></div></div>';
 }
-
-function renderInstallers(){
-  const c = DATA.company;
-  const meta = [c.city, c.phone ? "+" + c.phone : ""].filter(Boolean).join(" · ") || "Contact number not added yet";
-  let html = '<div class="card"><h3>' + c.name + '</h3><p class="meta">' + meta + '</p>' +
-    '<p class="meta" style="margin-top:6px">All the rates and data in this app belong to ' + c.name + '.</p>' +
-    '<div class="acts">' + (c.phone ? '<a class="btn alt" href="tel:+' + c.phone + '">Call</a>' : '') +
-    '<a class="btn" target="_blank" rel="noopener" href="' + waLink(summary, c.phone) + '">Ask for a quote</a></div></div>';
-  if (DATA.installers.length) {
-    html += '<h2 style="margin-top:22px">Other installers</h2>' + DATA.installers.map(i =>
-      '<div class="card"><h3>' + i.name + '</h3><p class="meta">' + i.city + '</p>' +
-      '<div class="acts"><a class="btn alt" href="tel:+' + i.phone + '">Call</a>' +
-      '<a class="btn" target="_blank" rel="noopener" href="' + waLink(summary, i.phone) + '">Ask for a quote</a></div></div>').join("");
-  }
-  $("instList").innerHTML = html;
-}
-
 document.querySelectorAll("#t-calc input").forEach(i => i.addEventListener("input", calc));
-$("roof").addEventListener("input", roofInfo);
-roofInfo();
-$("phase").addEventListener("change", calc);
-renderRateTable();
-[...new Set(DATA.priceTable.map(r => r.kw))].sort((a, b) => a - b).forEach(k => {
-  const o = document.createElement("option"); o.value = k; o.textContent = k + " kW"; $("kwSel").appendChild(o);
-});
-$("mode").addEventListener("change", () => {
-  const m = $("mode").value;
-  // pichhle hisaab ki jankari naye selection mein bhar do, taaki sab jude rahein
-  if (m === "kw") $("kwSel").value = String(last.kw);
-  if (m === "units") $("units").value = last.units;
-  if (m === "bill") { const c = +$("connKw").value || 3; $("bill").value = Math.round(fixedCharge(c) + last.units * billRate(c)); }
-  $("unitsBox").style.display = m === "units" ? "block" : "none";
-  $("billBox").style.display = m === "bill" ? "block" : "none";
-  $("kwBox").style.display = m === "kw" ? "block" : "none";
-  calc();
-});
-for (let k = 1; k <= 50; k++) { const o = document.createElement("option"); o.value = k; o.textContent = k + " kW"; $("connKw").appendChild(o); }
-$("connKw").value = "3";
-$("connKw").addEventListener("change", calc);
-$("kwSel").addEventListener("change", calc);
-$("emiBox").addEventListener("click", e => {
-  const tr = e.target.closest && e.target.closest("tr[data-y]");
-  if (tr) { loanSel = +tr.dataset.y; calc(); }
-});
-calc();
-if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js").catch(() => {}); }
+$("mode").addEventListener("change", () => { const m = $("mode").value; $("unitsBox").style.display = m === "units" ? "block" : "none"; $("billBox").style.display = m === "bill" ? "block" : "none"; $("kwBox").style.display = m === "kw" ? "block" : "none"; calc(); });
+for (let k = 1; k <= 50; k++) { const o = document.createElement("option"); o.value = k; o.textContent = k + " kW"; $("connKw").appendChild(o); } $("connKw").value = "3";
+[...new Set(DATA.priceTable.map(r => r.kw))].sort((a,b)=>a-b).forEach(k=>{ const o=document.createElement("option"); o.value=k; o.textContent=k+" kW"; $("kwSel").appendChild(o); });
+renderRateTable(); calc();
+if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js").catch(()=>{}); }
 </script>
 </body>
 </html>
