@@ -2,7 +2,7 @@
   "name": "Maruti Energy Solar System",
   "short_name": "Maruti Energy Solar System",
   "description": "Maruti Energy Solar System - Solar Energy Solutions",
-  "start_url": "/maruti-soler-app/",
+  "start_url": "/index.html/",
   "scope": "./",
   "display": "standalone",
   "background_color": "#EAF3F8",
